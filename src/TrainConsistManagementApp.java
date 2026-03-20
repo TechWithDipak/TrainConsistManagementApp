@@ -1,41 +1,34 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        System.out.println("=======================================");
-        System.out.println("UC2 - Add Passenger Bogies to Train");
-        System.out.println("=======================================\n");
 
-        // Create ArrayList for passenger bogies
-        List<String> passengerBogies = new ArrayList<>();
+        System.out.println("======================================");
+        System.out.println(" UC5 - Preserve Insertion Order of Bogies ");
+        System.out.println("======================================\n");
 
-        // Adding bogies
-        passengerBogies.add("Sleeper");
-        passengerBogies.add("AC Chair");
-        passengerBogies.add("First Class");
+        // LinkedHashSet preserves insertion order and ensures uniqueness
+        Set<String> formation = new LinkedHashSet<>();
 
-        // Display after adding
-        System.out.println("After Adding Bogies:");
-        System.out.println("Passenger Bogies : " + passengerBogies + "\n");
+        // Attaching bogies in order
+        formation.add("Engine");
+        formation.add("Sleeper");
+        formation.add("Cargo");
+        formation.add("Guard");
 
-        // Remove a bogie
-        passengerBogies.remove("AC Chair");
+        // Attempt to add duplicate bogie
+        formation.add("Sleeper");  // This will be ignored
 
-        // Display after removing
-        System.out.println("After Removing 'AC Chair':");
-        System.out.println("Passenger Bogies : " + passengerBogies + "\n");
+        // Display final train formation
+        System.out.println("Final Train Formation:");
+        System.out.println(formation);
 
-        // Check if Sleeper exists
-        System.out.println("Checking if 'Sleeper' exists:");
-        System.out.println("Contains Sleeper? : " + passengerBogies.contains("Sleeper") + "\n");
+        System.out.println("\nNote:");
+        System.out.println("LinkedHashSet preserves insertion order and removes duplicates automatically.");
 
-        // Final list
-        System.out.println("Final Train Passenger Consist:");
-        System.out.println(passengerBogies + "\n");
-
-        System.out.println("UC2 operations completed successfully...");
+        System.out.println("\nUC5 formation setup completed...");
     }
 }
