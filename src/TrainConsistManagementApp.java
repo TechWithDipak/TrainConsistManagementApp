@@ -1,54 +1,57 @@
-import java.util.*;
-
-// Step 1: Create Bogie class
-class Bogie {
-    String name;
-    int capacity;
-
-    // Constructor
-    Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    // Display method
-    void display() {
-        System.out.println(name + " -> " + capacity);
-    }
-}
-
 public class TrainConsistManagementApp {
 
+    // ---- CUSTOM EXCEPTION ----
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
+    // ---- Passenger Bogie Model ----
+    static class PassengerBogie {
+        private String type;
+        private int capacity;
+
+        // Constructor with validation
+        public PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
+            this.type = type;
+            this.capacity = capacity;
+        }
+
+        // Getters
+        public String getType() {
+            return type;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        @Override
+        public String toString() {
+            return "PassengerBogie{" +
+                    "type='" + type + '\'' +
+                    ", capacity=" + capacity +
+                    '}';
+        }
+    }
+
+    // ---- MAIN METHOD ----
     public static void main(String[] args) {
+        try {
+            PassengerBogie bogie1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Created: " + bogie1);
 
-        System.out.println("=====================================");
-        System.out.println("UC7 - Sort Bogies by Capacity (Comparator)");
-        System.out.println("=====================================");
+            PassengerBogie bogie2 = new PassengerBogie("AC Chair", 0); // will throw exception
+            System.out.println("Created: " + bogie2);
 
-        // Step 2: Create List
-        List<Bogie> bogieList = new ArrayList<>();
-
-        // Step 3: Add Bogies
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 24));
-        bogieList.add(new Bogie("General", 90));
-
-        // Before Sorting
-        System.out.println("\nBefore Sorting:");
-        for (Bogie b : bogieList) {
-            b.display();
+        } catch (InvalidCapacityException e) {
+            System.out.println("Exception: " + e.getMessage());
         }
 
-        // Step 4: Sort using Comparator (by capacity)
-        bogieList.sort(Comparator.comparingInt(b -> b.capacity));
-
-        // After Sorting
-        System.out.println("\nAfter Sorting by Capacity:");
-        for (Bogie b : bogieList) {
-            b.display();
-        }
-
-        System.out.println("\nUC7 sorting completed...");
+        System.out.println("Execution continues safely...");
     }
 }
