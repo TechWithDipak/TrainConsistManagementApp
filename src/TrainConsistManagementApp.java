@@ -1,57 +1,69 @@
+/**
+ * Custom Exception to handle invalid bogie capacity.
+ */
+class InvalidCapacityException extends Exception {
+    public InvalidCapacityException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Use Case 14: Handle Invalid Bogie Capacity (Custom Exception)
+ * This class prevents invalid passenger bogies from being added to the train
+ * by enforcing capacity rules at the time of object creation.
+ * * @author Developer
+ * @version 14.0
+ */
 public class TrainConsistManagementApp {
 
-    // ---- CUSTOM EXCEPTION ----
-    static class InvalidCapacityException extends Exception {
-        public InvalidCapacityException(String message) {
-            super(message);
-        }
-    }
-
-    // ---- Passenger Bogie Model ----
+    // Passenger Bogie model with validation logic
     static class PassengerBogie {
-        private String type;
-        private int capacity;
+        String type;
+        int capacity;
 
-        // Constructor with validation
-        public PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+        /**
+         * Constructor that enforces safety rules.
+         * @throws InvalidCapacityException if capacity is less than or equal to zero.
+         */
+        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
             if (capacity <= 0) {
+                // Rule: Capacity must be greater than zero
                 throw new InvalidCapacityException("Capacity must be greater than zero");
             }
             this.type = type;
             this.capacity = capacity;
         }
-
-        // Getters
-        public String getType() {
-            return type;
-        }
-
-        public int getCapacity() {
-            return capacity;
-        }
-
-        @Override
-        public String toString() {
-            return "PassengerBogie{" +
-                    "type='" + type + '\'' +
-                    ", capacity=" + capacity +
-                    '}';
-        }
     }
 
-    // ---- MAIN METHOD ----
     public static void main(String[] args) {
-        try {
-            PassengerBogie bogie1 = new PassengerBogie("Sleeper", 72);
-            System.out.println("Created: " + bogie1);
+        System.out.println("=====================================================");
+        System.out.println(" UC14 - Handle Invalid Bogie Capacity ");
+        System.out.println("=====================================================");
 
-            PassengerBogie bogie2 = new PassengerBogie("AC Chair", 0); // will throw exception
-            System.out.println("Created: " + bogie2);
+        try {
+            // Attempting to create a valid bogie
+            System.out.println("Creating Sleeper bogie with 72 seats...");
+            PassengerBogie validBogie = new PassengerBogie("Sleeper", 72);
+            System.out.println("Successfully created: " + validBogie.type);
+
+            // Attempting to create an invalid bogie (Zero Capacity)
+            System.out.println("\nCreating AC Chair bogie with 0 seats...");
+            PassengerBogie invalidBogie = new PassengerBogie("AC Chair", 0);
 
         } catch (InvalidCapacityException e) {
-            System.out.println("Exception: " + e.getMessage());
+            // Catching and displaying the custom error message
+            System.err.println("Error: " + e.getMessage());
         }
 
-        System.out.println("Execution continues safely...");
+        try {
+            // Attempting to create an invalid bogie (Negative Capacity)
+            System.out.println("\nCreating First Class bogie with -10 seats...");
+            PassengerBogie negativeBogie = new PassengerBogie("First Class", -10);
+
+        } catch (InvalidCapacityException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        System.out.println("\nUC14 exception handling completed...");
     }
 }
