@@ -1,64 +1,73 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Use Case 13: Performance Comparison (Loops vs Streams)
+ * Benchmarks the execution time of traditional loops against Stream API
+ * using System.nanoTime() for a large dataset of bogies.
+ * * @author Developer
+ * @version 13.0
+ */
 public class TrainConsistManagementApp {
 
-    // Bogie model
-    static class Bogie {
+    static class PassengerBogie {
         String type;
         int capacity;
 
-        Bogie(String type, int capacity) {
+        PassengerBogie(String type, int capacity) {
             this.type = type;
             this.capacity = capacity;
-        }
-
-        @Override
-        public String toString() {
-            return type + " (Capacity: " + capacity + ")";
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(" =============================================== ");
+        System.out.println("=====================================================");
         System.out.println(" UC13 - Performance Comparison (Loops vs Streams) ");
-        System.out.println(" =============================================== \n");
+        System.out.println("=====================================================");
 
-        // Create large test dataset
-        List<Bogie> bogies = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            bogies.add(new Bogie("Passenger-" + i, (i % 100) + 1));
+        // 1. Prepare a large dataset (e.g., 10,000 bogies)
+        List<PassengerBogie> bogieList = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            bogieList.add(new PassengerBogie("Sleeper", 72));
+            bogieList.add(new PassengerBogie("AC Chair", 56));
         }
 
-        // Loop-based filtering
-        long startLoop = System.nanoTime();
-        List<Bogie> loopFiltered = new ArrayList<>();
-        for (Bogie b : bogies) {
+        // --- LOOP PERFORMANCE MEASUREMENT ---
+        long startLoop = System.nanoTime(); // Start timestamp
+        List<PassengerBogie> loopFiltered = new ArrayList<>();
+        for (PassengerBogie b : bogieList) {
             if (b.capacity > 60) {
                 loopFiltered.add(b);
             }
         }
-        long endLoop = System.nanoTime();
+        long endLoop = System.nanoTime(); // End timestamp
         long loopDuration = endLoop - startLoop;
 
-        // Stream-based filtering
-        long startStream = System.nanoTime();
-        List<Bogie> streamFiltered = bogies.stream()
+        // --- STREAM PERFORMANCE MEASUREMENT ---
+        long startStream = System.nanoTime(); // Start timestamp
+        List<PassengerBogie> streamFiltered = bogieList.stream()
                 .filter(b -> b.capacity > 60)
                 .collect(Collectors.toList());
-        long endStream = System.nanoTime();
+        long endStream = System.nanoTime(); // End timestamp
         long streamDuration = endStream - startStream;
 
-        // Display results
-        System.out.println("Loop Execution Time (ns): " + loopDuration);
-        System.out.println("Stream Execution Time (ns): " + streamDuration);
-        System.out.println("UC13 performance benchmarking completed ...");
+        // 2. Display results and performance metrics
+        System.out.println("Total Bogies Processed: " + bogieList.size());
+        System.out.println("Filtered Count (Loop): " + loopFiltered.size());
+        System.out.println("Filtered Count (Stream): " + streamFiltered.size());
 
-        // Consistency check
-        if (loopFiltered.size() == streamFiltered.size()) {
-            System.out.println("Both approaches produced identical results.");
+        System.out.println("\nExecution Time Results:");
+        System.out.println("Traditional Loop Time: " + loopDuration + " ns");
+        System.out.println("Stream API Time      : " + streamDuration + " ns");
+
+        // 3. Performance Analysis
+        if (loopDuration < streamDuration) {
+            System.out.println("\nResult: Traditional Loop was faster in this run.");
         } else {
-            System.out.println("Mismatch detected between loop and stream results!");
+            System.out.println("\nResult: Stream API was faster in this run.");
         }
+
+        System.out.println("\nUC13 performance comparison completed...");
     }
 }
