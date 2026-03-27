@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.stream.*;
 
-
 class Bogie {
     private String type;
     private int capacity;
@@ -11,26 +10,20 @@ class Bogie {
         this.capacity = capacity;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
     public String getType() {
         return type;
     }
 
-    @Override
-    public String toString() {
-        return type + " -> " + capacity;
+    public int getCapacity() {
+        return capacity;
     }
 }
-
 public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
         System.out.println("===========================================");
-        System.out.println("   UC8 - Filter Passenger Bogies Using Streams");
+        System.out.println("   UC9 - Group Bogies by Type");
         System.out.println("===========================================\n");
 
 
@@ -39,21 +32,30 @@ public class TrainConsistManagementApp {
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
         bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("General", 90));
+        bogies.add(new Bogie("Sleeper", 70));
+        bogies.add(new Bogie("AC Chair", 60));
 
 
         System.out.println("All Bogies:");
-        bogies.forEach(System.out::println);
+        bogies.forEach(b ->
+                System.out.println(b.getType() + " -> " + b.getCapacity())
+        );
 
 
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
+        Map<String, List<Bogie>> groupedBogies = bogies.stream()
+                .collect(Collectors.groupingBy(Bogie::getType));
 
 
-        System.out.println("\nFiltered Bogies (Capacity > 60):");
-        filteredBogies.forEach(System.out::println);
+        System.out.println("\nGrouped Bogies:\n");
 
-        System.out.println("\nUC8 filtering completed...");
+        groupedBogies.forEach((type, list) -> {
+            System.out.println("Bogie Type: " + type);
+            list.forEach(b ->
+                    System.out.println("Capacity -> " + b.getCapacity())
+            );
+            System.out.println();
+        });
+
+        System.out.println("UC9 grouping completed...");
     }
 }
