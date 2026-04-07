@@ -1,69 +1,54 @@
-/**
- * Custom Exception to handle invalid bogie capacity.
- */
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
+class CargoSafetyException extends RuntimeException {
+    public CargoSafetyException(String message) {
         super(message);
     }
 }
-
-/**
- * Use Case 14: Handle Invalid Bogie Capacity (Custom Exception)
- * This class prevents invalid passenger bogies from being added to the train
- * by enforcing capacity rules at the time of object creation.
- * * @author Developer
- * @version 14.0
- */
 public class TrainConsistManagementApp {
+    static class GoodsBogie {
+        String shape;
+        String cargo;
 
-    // Passenger Bogie model with validation logic
-    static class PassengerBogie {
-        String type;
-        int capacity;
+        GoodsBogie(String shape) {
+            this.shape = shape;
+        }
 
-        /**
-         * Constructor that enforces safety rules.
-         * @throws InvalidCapacityException if capacity is less than or equal to zero.
-         */
-        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-            if (capacity <= 0) {
-                // Rule: Capacity must be greater than zero
-                throw new InvalidCapacityException("Capacity must be greater than zero");
+        void assignCargo(String cargoType) {
+            try {
+
+                if (shape.equalsIgnoreCase("Rectangular") &&
+                        cargoType.equalsIgnoreCase("Petroleum")) {
+
+                    throw new CargoSafetyException("Unsafe cargo assignment!");
+                }
+
+                this.cargo = cargoType;
+                System.out.println("Cargo assigned successfully -> " + cargoType);
+
+            } catch (CargoSafetyException e) {
+                System.err.println("Error: " + e.getMessage());
+
+            } finally {
+                System.out.println("Cargo validation completed for " + shape + " bogie");
             }
-            this.type = type;
-            this.capacity = capacity;
         }
     }
 
     public static void main(String[] args) {
-        System.out.println("=====================================================");
-        System.out.println(" UC14 - Handle Invalid Bogie Capacity ");
-        System.out.println("=====================================================");
 
-        try {
-            // Attempting to create a valid bogie
-            System.out.println("Creating Sleeper bogie with 72 seats...");
-            PassengerBogie validBogie = new PassengerBogie("Sleeper", 72);
-            System.out.println("Successfully created: " + validBogie.type);
+        System.out.println("===============================================");
+        System.out.println(" UC15 - Safe Cargo Assignment ");
+        System.out.println("===============================================\n");
 
-            // Attempting to create an invalid bogie (Zero Capacity)
-            System.out.println("\nCreating AC Chair bogie with 0 seats...");
-            PassengerBogie invalidBogie = new PassengerBogie("AC Chair", 0);
 
-        } catch (InvalidCapacityException e) {
-            // Catching and displaying the custom error message
-            System.err.println("Error: " + e.getMessage());
-        }
+        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
+        cylindrical.assignCargo("Petroleum");
 
-        try {
-            // Attempting to create an invalid bogie (Negative Capacity)
-            System.out.println("\nCreating First Class bogie with -10 seats...");
-            PassengerBogie negativeBogie = new PassengerBogie("First Class", -10);
+        System.out.println();
 
-        } catch (InvalidCapacityException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
 
-        System.out.println("\nUC14 exception handling completed...");
+        GoodsBogie rectangular = new GoodsBogie("Rectangular");
+        rectangular.assignCargo("Petroleum");
+
+        System.out.println("\nUC15 runtime handling completed...");
     }
 }
